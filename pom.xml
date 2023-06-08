@@ -6,9 +6,9 @@
 
     <properties>
         <java.version>17</java.version>
-        <kotlin.version>1.7.20</kotlin.version>
-        <mainClass></mainClass>
-        <packageName></packageName>
+        <kotlin.version>1.8.20</kotlin.version>
+        <mainClass>OyuBingo</mainClass>
+        <packageName>net.kigawa.oyucraft.oyubingo</packageName>
         <dokka.version>${kotlin.version}</dokka.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
@@ -16,12 +16,12 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
     </properties>
 
-    <groupId>net.kigawa</groupId>
-    <artifactId></artifactId>
-    <version>1.0</version>
+    <groupId>net.kigawa.oyucraft</groupId>
+    <artifactId>oyu-bingo</artifactId>
+    <version>1.0.0</version>
     <name>${project.artifactId}</name>
-    <description></description>
-    <url>https://github.com/kigawa01/</url>
+    <description>bingo for oyucraft minecraft</description>
+    <url>https://github.com/oyucraft/oyu-bingo</url>
 
     <scm>
         <connection>scm:git:https://github.com/kigawa01/.git</connection>
@@ -47,7 +47,6 @@
     </developers>
 
     <build>
-        <testSourceDirectory>${project.basedir}/src/test/java</testSourceDirectory>
         <plugins>
             <!--source plugin-->
             <plugin>
@@ -110,23 +109,22 @@
                 <executions>
                     <execution>
                         <id>compile</id>
-                        <phase>process-sources</phase>
+                        <phase>compile</phase>
                         <goals>
                             <goal>compile</goal>
                         </goals>
                     </execution>
                     <execution>
                         <id>test-compile</id>
+                        <phase>test-compile</phase>
                         <goals>
                             <goal>test-compile</goal>
                         </goals>
-                        <configuration>
-                            <sourceDirs>
-                                <sourceDir>${project.basedir}/src/test/java</sourceDir>
-                            </sourceDirs>
-                        </configuration>
                     </execution>
                 </executions>
+                <configuration>
+                    <jvmTarget>1.8</jvmTarget>
+                </configuration>
             </plugin>
 
             <!--compiler-->
@@ -154,6 +152,20 @@
                     </execution>
                     <execution>
                         <id>java-test-compile</id>
+                        <phase>test-compile</phase>
+                        <goals>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>compile</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>testCompile</id>
                         <phase>test-compile</phase>
                         <goals>
                             <goal>testCompile</goal>
@@ -190,8 +202,34 @@
             </plugin>
         </plugins>
     </build>
+    <repositories>
+        <!-- This adds the Spigot Maven repository to the build -->
+        <repository>
+            <id>spigot-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+        </repository>
+    </repositories>
 
     <dependencies>
+        <!--This adds the Spigot API artifact to the build -->
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-api</artifactId>
+            <version>1.19.4-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-stdlib-jdk8</artifactId>
+            <version>${kotlin.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>dev.jorel</groupId>
+            <artifactId>commandapi-bukkit-shade</artifactId>
+            <version>9.0.1</version>
+        </dependency>
+
+
         <!-- テストコードの記述に必要なライブラリを導入 -->
         <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
         <dependency>
@@ -202,8 +240,9 @@
         </dependency>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-stdlib</artifactId>
+            <artifactId>kotlin-test</artifactId>
             <version>${kotlin.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

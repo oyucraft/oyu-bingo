@@ -228,6 +228,11 @@
             <artifactId>commandapi-bukkit-shade</artifactId>
             <version>9.0.1</version>
         </dependency>
+        <dependency>
+            <groupId>net.kigawa.kutil</groupId>
+            <artifactId>kutil-unit</artifactId>
+            <version>4.3.0</version>
+        </dependency>
 
 
         <!-- テストコードの記述に必要なライブラリを導入 -->

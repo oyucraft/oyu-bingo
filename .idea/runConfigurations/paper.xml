@@ -1,0 +1,12 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="paper" type="JarApplication">
+    <option name="JAR_PATH" value="$PROJECT_DIR$/../../../McServers/paper 1.19.4/paper-1.19.4-538.jar" />
+    <option name="WORKING_DIRECTORY" value="D:\McServers\paper 1.19.4" />
+    <option name="ALTERNATIVE_JRE_PATH" />
+    <method v="2">
+      <option name="BuildArtifacts" enabled="true">
+        <artifact name="oyu-bingo:jar" />
+      </option>
+    </method>
+  </configuration>
+</component>

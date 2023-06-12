@@ -10,7 +10,7 @@ class ConfigInitializedFilter(
   
   
   override fun <T: Any> filter(obj: T, stack: InitStack): T {
-    if (obj !is ConfigHandler) return obj
+    if (obj !is Config) return obj
     
     obj.init(oyuBingo)
     obj.load()

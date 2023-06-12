@@ -9,14 +9,14 @@ import java.io.Closeable
 import java.io.File
 
 
-abstract class ConfigHandler(
+abstract class Config(
   private var fileName: String? = null,
   private var fileDir: File? = null,
 ): Closeable {
   
   lateinit var file: File
     private set
-  lateinit var config: FileConfiguration
+  lateinit var fileConfig: FileConfiguration
     private set
   
   fun init(oyuBingo: OyuBingo) {
@@ -36,7 +36,7 @@ abstract class ConfigHandler(
       getFileName()
     )
     
-    config = YamlConfiguration.loadConfiguration(file)
+    fileConfig = YamlConfiguration.loadConfiguration(file)
   }
   
   fun getFileName(): String {
@@ -53,34 +53,30 @@ abstract class ConfigHandler(
       file.createNewFile()
     }
     
-    config.load(file)
+    fileConfig.load(file)
     loadValues()
   }
   
+  fun getConfigFields(): List<ConfigField> {
+    return KutilReflect.getAllExitFields(javaClass).mapNotNull {
+      val configValue = it.getAnnotation(ConfigValue::class.java) ?: return@mapNotNull null
+      return@mapNotNull ConfigField(this, it, configValue)
+    }
+  }
+  
   private fun loadValues() {
-    KutilReflect.getAllExitFields(javaClass).forEach {
-      val configValue = it.getAnnotation(ConfigValue::class.java) ?: return
-      val name = if (configValue.name == "") configValue.name else it.name
-      
-      it.isAccessible = true
-      
-      it.set(this, config.get(name, it.get(this)))
+    getConfigFields().forEach {
+      it.set(fileConfig.getObject<Any?>(it.name, it.type, it.get()))
     }
     save()
   }
   
   private fun save() {
-    KutilReflect.getAllExitFields(javaClass).forEach {
-      
-      val configValue = it.getAnnotation(ConfigValue::class.java) ?: return
-      val name = if (configValue.name == "") configValue.name else it.name
-      
-      it.isAccessible = true
-      
-      config.set(name, it.get(this))
+    getConfigFields().forEach {
+      fileConfig.set(it.name, it.get())
     }
     
-    config.save(file)
+    fileConfig.save(file)
   }
   
   override fun close() {

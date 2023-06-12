@@ -32,10 +32,10 @@ enum class CaseFormat(
         list.add(sb.toString())
         sb.clear()
       }
-      sb.append(it)
+      sb.append(it.lowercaseChar())
     }
     
-    listOf()
+    list
   });
   
   fun caseString(string: String): CaseString {

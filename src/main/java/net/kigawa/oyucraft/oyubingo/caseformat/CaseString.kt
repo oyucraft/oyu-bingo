@@ -1,5 +1,6 @@
 package net.kigawa.oyucraft.oyubingo.caseformat
 
+@Suppress("unused")
 class CaseString(
   val values: List<String>,
   private val caseFormat: CaseFormat,

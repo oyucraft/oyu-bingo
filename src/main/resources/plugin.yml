@@ -1,0 +1,6 @@
+name: oyu-bingo
+version: '${project.version}'
+main: net.kigawa.oyucraft.oyubingo.OyuBingo
+
+api-version: 1.18
+authors: [ kigawa ]

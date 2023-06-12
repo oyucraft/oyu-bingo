@@ -28,7 +28,7 @@ enum class CaseFormat(
         sb.append(it)
         return@forEach
       }
-      if (sb.length != 0) {
+      if (sb.isNotEmpty()) {
         list.add(sb.toString())
         sb.clear()
       }
@@ -38,7 +38,11 @@ enum class CaseFormat(
     listOf()
   });
   
-  fun newInstance(values: List<String>): CaseString {
+  fun caseString(string: String): CaseString {
+    return caseString(split(string))
+  }
+  
+  fun caseString(values: List<String>): CaseString {
     return CaseString(values, this)
   }
   

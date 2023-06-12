@@ -233,6 +233,11 @@
             <artifactId>kutil-unit</artifactId>
             <version>4.3.0</version>
         </dependency>
+        <dependency>
+            <groupId>net.kigawa.kutil</groupId>
+            <artifactId>kutil</artifactId>
+            <version>2.2.1</version>
+        </dependency>
 
 
         <!-- テストコードの記述に必要なライブラリを導入 -->

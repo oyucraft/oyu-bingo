@@ -30,6 +30,7 @@ class OyuBingo: JavaPlugin() {
   }
   
   override fun onDisable() {
+    container.close()
     CommandAPI.onDisable()
   }
 }

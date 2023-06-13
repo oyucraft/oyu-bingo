@@ -48,7 +48,7 @@
 
     <build>
         <plugins>
-            <!--source plugin-->
+            <!--maven-source-plugin-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
@@ -63,7 +63,7 @@
                 </executions>
             </plugin>
 
-            <!--dokka-->
+            <!--dokka-maven-plugin-->
             <plugin>
                 <groupId>org.jetbrains.dokka</groupId>
                 <artifactId>dokka-maven-plugin</artifactId>
@@ -95,13 +95,14 @@
             </plugin>
 
             <!-- JUnit 5 でのテスト実行に必要なプラグインを導入 -->
+            <!-- maven-surefire-plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.0.0-M5</version>
             </plugin>
 
-            <!--kotlin-->
+            <!--kotlin maven plugin-->
             <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-maven-plugin</artifactId>
@@ -123,11 +124,12 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <jvmTarget>1.8</jvmTarget>
+                    <jvmTarget>11</jvmTarget>
+                    <languageVersion>1.9</languageVersion>
                 </configuration>
             </plugin>
 
-            <!--compiler-->
+            <!--maven compiler plugin-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -233,7 +235,7 @@
         <!--This adds the Spigot API artifact to the build -->
         <dependency>
             <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
+            <artifactId>spigot</artifactId>
             <version>1.19.4-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>

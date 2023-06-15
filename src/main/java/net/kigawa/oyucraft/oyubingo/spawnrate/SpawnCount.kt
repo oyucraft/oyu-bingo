@@ -1,38 +1,38 @@
 package net.kigawa.oyucraft.oyubingo.spawnrate
 
-import org.bukkit.entity.SpawnCategory
+import org.bukkit.entity.EntityType
 
-class SpawnRateCategories(
+class SpawnCount(
   val world: String = "world",
 ) {
   
-  private val categories = mutableMapOf<SpawnCategory, Int>()
-  val entries: MutableSet<MutableMap.MutableEntry<SpawnCategory, Int>>
+  private val categories = mutableMapOf<EntityType, Int>()
+  val entries: MutableSet<MutableMap.MutableEntry<EntityType, Int>>
     get() {
       return categories.entries
     }
   
   init {
-    SpawnCategory.values().forEach {
-      categories[it] = 1
+    EntityType.values().forEach {
+      categories[it] = 0
     }
   }
   
-  fun set(category: SpawnCategory, rate: Int) {
-    categories[category] = rate
+  fun set(entityType: EntityType, rate: Int) {
+    categories[entityType] = rate
   }
   
-  fun get(category: SpawnCategory): Int {
-    val result = categories[category]
+  fun get(entityType: EntityType): Int {
+    val result = categories[entityType]
     if (result != null) return result
     
-    set(category, 1)
+    set(entityType, 1)
     return 1
   }
   
   override fun equals(other: Any?): Boolean {
     if (this === other) return true
-    if (other !is SpawnRateCategories) return false
+    if (other !is SpawnCount) return false
     
     if (world != other.world) return false
     return categories == other.categories

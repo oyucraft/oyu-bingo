@@ -2,8 +2,7 @@ package net.kigawa.oyucraft.oyubingo.spawnrate
 
 import dev.jorel.commandapi.CommandAPICommand
 import dev.jorel.commandapi.CommandPermission
-import dev.jorel.commandapi.arguments.ArgumentSuggestions
-import dev.jorel.commandapi.arguments.StringArgument
+import dev.jorel.commandapi.arguments.*
 import dev.jorel.commandapi.executors.CommandArguments
 import dev.jorel.commandapi.executors.CommandExecutor
 import net.kigawa.kutil.unitapi.annotation.Kunit
@@ -12,7 +11,7 @@ import net.kigawa.oyucraft.oyubingo.command.SubCommand
 import org.bukkit.Bukkit
 import org.bukkit.World
 import org.bukkit.command.CommandSender
-import org.bukkit.entity.SpawnCategory
+import org.bukkit.entity.EntityType
 
 @Kunit
 class RateCommand(
@@ -29,25 +28,17 @@ class RateCommand(
         .replaceSuggestions(ArgumentSuggestions.stringCollection {Bukkit.getWorlds().map(World::name)})
     )
     .withArguments(
-      StringArgument("category")
-        .replaceSuggestions(ArgumentSuggestions.stringCollection {SpawnCategory.values().map(SpawnCategory::name)})
+      StringArgument("type")
+        .replaceSuggestions(ArgumentSuggestions.stringCollection {
+          spawnRateManager.spawnCategories().map {it.name}
+        })
     )
     .executes(CommandExecutor {sender: CommandSender, args: CommandArguments->
-      sender.sendMessage("get spawn rate")
+      sender.sendMessage("get additional spawn")
       
-      val world = args.get("world")?.let {Bukkit.getWorld(it.toString())}
-      if (world == null) {
-        sender.sendMessage("worldが見つかりません")
-        return@CommandExecutor
+      useSpawnRateManager(sender, args.get("world") as String, args.get("type") as String) {world, type->
+        sender.sendMessage(spawnRateManager.get(world, type).toString())
       }
-      val category = args.get("category")
-        ?.let {arg-> SpawnCategory.values().firstOrNull {it.name.lowercase() == arg.toString().lowercase()}}
-      if (category == null) {
-        sender.sendMessage("カテゴリが見つかりません")
-        return@CommandExecutor
-      }
-      
-      sender.sendMessage(spawnRateManager.get(world, category).toString())
     })
   
   
@@ -58,36 +49,45 @@ class RateCommand(
         .replaceSuggestions(ArgumentSuggestions.stringCollection {Bukkit.getWorlds().map(World::name)})
     )
     .withArguments(
-      StringArgument("category")
-        .replaceSuggestions(ArgumentSuggestions.stringCollection {SpawnCategory.values().map(SpawnCategory::name)})
+      StringArgument("type")
+        .replaceSuggestions(ArgumentSuggestions.stringCollection {
+          spawnRateManager.spawnCategories().map {it.name}
+        })
     )
+    .withArguments(IntegerArgument("additional spawn"))
     .executes(CommandExecutor {sender: CommandSender, args: CommandArguments->
-      sender.sendMessage("set spawn rate ${args.get("")}")
+      sender.sendMessage("set additional spawn ${args.get("additional spawn")}")
       
-      useSpawnRateManager(sender, args.get("world"), args.get("world")) {world, category->
-        val
+      useSpawnRateManager(sender, args.get("world") as String, args.get("type") as String) {world, type->
+        val tickPerSpawn = args.get("additional spawn")
+        if (tickPerSpawn !is Int) {
+          sender.sendMessage("数字を指定してください")
+          return@useSpawnRateManager
+        }
         
-        spawnRateManager.set(world,category)
+        spawnRateManager.set(world, type, tickPerSpawn)
       }
     })
   
   private fun useSpawnRateManager(
     sender: CommandSender,
-    worldName: Any?,
-    categoryName: Any?,
-    function: (World, SpawnCategory)->Unit,
+    worldName: String,
+    categoryName: String,
+    function: (World, EntityType)->Unit,
   ) {
-    val world = worldName?.let {Bukkit.getWorld(it.toString())}
+    val world = Bukkit.getWorld(worldName)
     if (world == null) {
       sender.sendMessage("worldが見つかりません")
       return
     }
-    val category = args.get("category")
-      ?.let {arg-> SpawnCategory.values().firstOrNull {it.name.lowercase() == arg.toString().lowercase()}}
-    if (category == null) {
+    
+    val type = spawnRateManager.spawnCategories().firstOrNull {
+      it.name.lowercase() == categoryName.lowercase()
+    }
+    if (type == null) {
       sender.sendMessage("カテゴリが見つかりません")
       return
     }
-    function(world, category)
+    function(world, type)
   }
 }

@@ -71,7 +71,7 @@ abstract class Config(
     save()
   }
   
-  private fun save() {
+  fun save() {
     getConfigFields().forEach {
       fileConfig.set(it.name, it.get())
     }

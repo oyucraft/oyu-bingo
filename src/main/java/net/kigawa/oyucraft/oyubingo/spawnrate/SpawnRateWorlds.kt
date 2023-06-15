@@ -5,23 +5,23 @@ import org.bukkit.World
 
 class SpawnRateWorlds {
   
-  private val categoriesSet = mutableSetOf<SpawnRateCategories>()
-  val categoriesList: List<SpawnRateCategories>
+  val categoriesSet = mutableSetOf<SpawnCount>()
+  val categoriesList: List<SpawnCount>
     get() {
       return ArrayList(categoriesSet)
     }
   
   init {
     Bukkit.getWorlds().forEach {
-      categoriesSet.add(SpawnRateCategories(it.name))
+      categoriesSet.add(SpawnCount(it.name))
     }
   }
   
-  fun getCategories(world: World): SpawnRateCategories {
+  fun getSpawnCount(world: World): SpawnCount {
     categoriesSet.forEach {
       if (it.world == world.name) return it
     }
-    val categories = SpawnRateCategories(world.name)
+    val categories = SpawnCount(world.name)
     categoriesSet.add(categories)
     return categories
   }

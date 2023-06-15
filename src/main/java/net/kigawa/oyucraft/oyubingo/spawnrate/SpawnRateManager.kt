@@ -3,7 +3,7 @@ package net.kigawa.oyucraft.oyubingo.spawnrate
 import net.kigawa.kutil.unitapi.annotation.Kunit
 import org.bukkit.Bukkit
 import org.bukkit.World
-import org.bukkit.entity.SpawnCategory
+import org.bukkit.entity.EntityType
 import java.io.Closeable
 
 @Kunit
@@ -13,33 +13,36 @@ class SpawnRateManager(
   
   init {
     Bukkit.getWorlds().forEach {world->
-      SpawnCategory.values().forEach {
-        set(world, it, spawnRateConfig.spawnRateWorlds.getCategories(world).get(it))
+      spawnCategories().forEach {
+        set(world, it, spawnRateConfig.spawnRateWorlds.getSpawnCount(world).get(it))
       }
     }
   }
   
-  fun set(world: World, spawnCategory: SpawnCategory, tickPerSpawn: Int) {
-    world.setTicksPerSpawns(spawnCategory, tickPerSpawn)
+  fun set(world: World, entityType: EntityType, tickPerSpawn: Int) {
     spawnRateConfig
       .spawnRateWorlds
-      .getCategories(world)
-      .set(spawnCategory, tickPerSpawn)
+      .getSpawnCount(world)
+      .set(entityType, tickPerSpawn)
   }
   
-  fun get(world: World, spawnCategory: SpawnCategory): Long? {
-    return world.getTicksPerSpawns(spawnCategory)
+  fun get(world: World, entityType: EntityType): Int {
+    return spawnRateConfig
+      .spawnRateWorlds
+      .getSpawnCount(world)
+      .get(entityType)
   }
   
-  fun reset(world: World, spawnCategory: SpawnCategory) {
-    set(world, spawnCategory, 1)
+  fun reset(world: World, entityType: EntityType) {
+    set(world, entityType, 0)
   }
   
   override fun close() {
-    Bukkit.getWorlds().forEach {world->
-      SpawnCategory.values().forEach {
-        world.setTicksPerSpawns(it, 1)
-      }
-    }
+  }
+  
+  fun spawnCategories(): List<EntityType> {
+    return EntityType
+      .values()
+      .toList()
   }
 }

@@ -1,4 +1,4 @@
-package net.kigawa.oyucraft.oyubingo
+package net.kigawa.oyucraft.oyubingo.unit
 
 import net.kigawa.kutil.unitapi.extention.Message
 import net.kigawa.kutil.unitapi.extention.UnitLogger

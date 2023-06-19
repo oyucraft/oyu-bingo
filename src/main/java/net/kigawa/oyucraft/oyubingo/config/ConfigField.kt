@@ -1,16 +1,17 @@
 package net.kigawa.oyucraft.oyubingo.config
 
+import net.kigawa.oyucraft.oyubingo.config.annotation.ConfigValue
 import java.lang.reflect.Field
 
 class ConfigField(
   private val config: Config,
   private val field: Field,
-  private val configValue: ConfigValue,
+  private val configName: ConfigValue,
 ) {
   
   val name: String
     get() {
-      return if (configValue.name == "") this.field.name else configValue.name
+      return if (configName.name == "") this.field.name else configName.name
     }
   val type: Class<Any?>
     get() {

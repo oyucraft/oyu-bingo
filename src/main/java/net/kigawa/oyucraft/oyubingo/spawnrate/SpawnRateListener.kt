@@ -38,9 +38,9 @@ class SpawnRateListener(
       return
     }
     
-    val additionalSpawnCount = spawnRateManager.get(world, type)
+    val additionalSpawnCount = spawnRateManager.get(world.name, type)
     
-    for (i in 1..additionalSpawnCount) {
+    for (i in 2..additionalSpawnCount) {
       val clazz = type.entityClass
       if (clazz == null) {
         logger.warning("entity class is null")

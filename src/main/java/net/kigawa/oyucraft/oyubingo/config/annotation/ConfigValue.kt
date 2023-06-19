@@ -1,4 +1,4 @@
-package net.kigawa.oyucraft.oyubingo.config
+package net.kigawa.oyucraft.oyubingo.config.annotation
 
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FIELD)

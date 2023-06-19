@@ -1,8 +1,9 @@
 package net.kigawa.oyucraft.oyubingo.spawnrate
 
 import net.kigawa.kutil.unitapi.annotation.Kunit
+import net.kigawa.oyucraft.oyubingo.OyuBingo
+import net.kigawa.oyucraft.oyubingo.config.ConfigManager
 import org.bukkit.Bukkit
-import org.bukkit.World
 import org.bukkit.entity.EntityType
 import java.io.Closeable
 
@@ -11,38 +12,43 @@ class SpawnRateManager(
   private val spawnRateConfig: SpawnRateConfig,
 ): Closeable {
   
-  init {
-    Bukkit.getWorlds().forEach {world->
-      spawnCategories().forEach {
-        set(world, it, spawnRateConfig.spawnRateWorlds.getSpawnCount(world).get(it))
-      }
-    }
-  }
-  
-  fun set(world: World, entityType: EntityType, tickPerSpawn: Int) {
+  fun set(worldName: String, entityType: EntityType, rate: Int) {
     spawnRateConfig
       .spawnRateWorlds
-      .getSpawnCount(world)
-      .set(entityType, tickPerSpawn)
+      .getOrCreateWorldSpawnRates(worldName)
+      .set(entityType, rate)
+    spawnRateConfig.save()
   }
   
-  fun get(world: World, entityType: EntityType): Int {
+  fun get(worldName: String, entityType: EntityType): Int {
     return spawnRateConfig
       .spawnRateWorlds
-      .getSpawnCount(world)
-      .get(entityType)
+      .getWorldSpawnRates(worldName)
+      ?.get(entityType)
+      ?: 1
   }
   
-  fun reset(world: World, entityType: EntityType) {
-    set(world, entityType, 0)
+  fun remove(worldName: String, entityTypeName: String) {
+    spawnRateConfig
+      .spawnRateWorlds
+      .getWorldSpawnRates(worldName)
+      ?.remove(entityTypeName)
   }
   
   override fun close() {
   }
   
-  fun spawnCategories(): List<EntityType> {
+  fun getEntityTypes(): List<EntityType> {
     return EntityType
       .values()
       .toList()
+  }
+  
+  fun getEntityType(name: String): EntityType? {
+    return EntityType
+      .values()
+      .firstOrNull {
+        it.name.lowercase() == name.lowercase()
+      }
   }
 }

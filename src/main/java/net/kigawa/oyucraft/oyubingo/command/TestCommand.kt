@@ -7,11 +7,13 @@ import dev.jorel.commandapi.executors.CommandExecutor
 import net.kigawa.kutil.unitapi.annotation.Kunit
 import net.kigawa.kutil.unitapi.component.UnitContainer
 import net.kigawa.oyucraft.oyubingo.config.Config
+import net.kigawa.oyucraft.oyubingo.config.ConfigUtil
 import org.bukkit.command.CommandSender
 
 @Kunit
 class TestCommand(
   private val container: UnitContainer,
+  private val configUtil: ConfigUtil,
 ): AbstractCommand(
   CommandAPICommand("test")
     .withPermission(CommandPermission.OP)
@@ -27,7 +29,7 @@ class TestCommand(
           container.getUnitList(Config::class.java).forEach {config->
             
             sender.sendMessage("_____${config.javaClass.simpleName}_____")
-            config.getConfigFields().forEach Field@{
+            configUtil.configFields(config).forEach Field@{
               sender.sendMessage("%-10s : %s".format(it.name, it.get()))
             }
           }
